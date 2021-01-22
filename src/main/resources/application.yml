@@ -1,0 +1,56 @@
+server:
+  port: ${SERVER_PORT:9001}
+  servlet:
+    context-path: /yl
+    application-display-name: YANGL Application
+
+spring:
+  security:
+    user:
+      name: yangl
+      password: yl123456
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/mypratice?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true
+      pool-name: MysqlHikariCP
+      maximum-pool-size: 16
+      minimum-idle: 8
+      idle-timeout: 60000
+      connection-timeout: 30000
+      connection-test-query: select 1 from dual
+      read-only: false
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      auto-commit: false
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: scheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 20
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    #数据库方式
+    job-store-type: jdbc
+    #初始化表结构
+    jdbc:
+      initialize-schema: never
+  main:
+    allow-bean-definition-overriding: true
+#指定mybatis信息
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.yl.quartz.demo.domain.entity

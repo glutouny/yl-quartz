@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yl.quartz.demo.infra.mapper.QuartzEntityMapper">
+
+    <select id="list" resultType="com.yl.quartz.demo.domain.entity.QuartzEntity">
+        SELECT
+        job.JOB_NAME jobName,
+        job.JOB_GROUP jobGroup,
+        job.DESCRIPTION description,
+        job.JOB_CLASS_NAME jobClassName,
+        cron.CRON_EXPRESSION cronExpression,
+        tri.TRIGGER_NAME triggerName,
+        qft.STATE triggerState
+        FROM
+        QRTZ_JOB_DETAILS job
+        LEFT JOIN QRTZ_TRIGGERS tri ON job.JOB_NAME = tri.JOB_NAME
+        LEFT JOIN QRTZ_CRON_TRIGGERS cron ON cron.TRIGGER_NAME = tri.TRIGGER_NAME
+        LEFT JOIN QRTZ_FIRED_TRIGGERS qft ON qft.JOB_NAME = job.JOB_NAME AND qft.JOB_GROUP = job.JOB_GROUP
+        <where>
+              1 = 1
+            <if test="jobName != null">
+                AND job.JOB_NAME like CONCAT(CONCAT('%',#{jobName}),'%')
+            </if>
+            <if test="description != null">
+                AND job.DESCRIPTION like CONCAT(CONCAT('%',#{description}),'%')
+            </if>
+            <if test="jobGroup != null">
+                AND job.JOB_GROUP = #{jobGroup}
+            </if>
+            <if test="jobClassName != null">
+                AND job.JOB_CLASS_NAME like CONCAT(CONCAT('%',#{jobClassName}),'%')
+            </if>
+            ORDER BY job.JOB_GROUP
+        </where>
+    </select>
+</mapper>
