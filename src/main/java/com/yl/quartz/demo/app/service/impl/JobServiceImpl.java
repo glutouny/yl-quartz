@@ -36,6 +36,7 @@ public class JobServiceImpl implements JobService {
     public void add(QuartzEntity entity) throws Exception {
 
         JobKey jobKey = new JobKey(entity.getJobName(),entity.getJobGroup());
+
         if (scheduler.checkExists(jobKey)) {
             throw new CommonException(entity.getJobName() + "exist in group " + entity.getJobGroup());
         }
